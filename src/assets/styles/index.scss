@@ -1,0 +1,59 @@
+:root {
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+header {
+  display: flex;
+  box-sizing: border-box;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  height: 4rem;
+  width: 100%;
+  box-shadow: 10px 1px 10px black;
+}
+
+.logo-menu {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+header img {
+  height: 3rem;
+  width: 6rem;
+}
+
+.groups-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.groups-buttons .cart {
+  border: 2px solid #ff7801;
+  color: #ff7801;
+  background-color: white;
+  border-radius: 2rem;
+  padding: 0.5rem;
+  height: 2.5rem;
+  width: 6rem;
+  cursor: pointer;
+}
+
+.groups-buttons .login {
+  border: none;
+  color: white;
+  background-color: #ff7801;
+  border-radius: 2rem;
+  padding: 0.5rem;
+  height: 2.5rem;
+  width: 6rem;
+  cursor: pointer;
+}
