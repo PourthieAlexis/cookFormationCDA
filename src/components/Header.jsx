@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faBasketShopping } from "@fortawesome/free-solid-svg-icons";
-import LogoCook from "./../assets/images/logo.png";
+import LogoCook from "/assets/images/logo.png";
 
 function Header() {
   return (

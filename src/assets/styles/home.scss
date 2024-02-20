@@ -1,0 +1,48 @@
+section {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 10rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.recette {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  height: 100%;
+  width: 100%;
+  gap: 2rem;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.card img {
+  width: 20rem;
+  height: 30rem;
+  border-radius: 1rem;
+  object-fit: cover;
+}
+
+.card p {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.loadMore {
+  display: flex;
+  align-items: center;
+  border: none;
+  color: white;
+  background-color: #ff7801;
+  border-radius: 2rem;
+  padding: 1rem 2rem;
+  height: 2.5rem;
+  cursor: pointer;
+  margin-bottom: 2rem;
+}
