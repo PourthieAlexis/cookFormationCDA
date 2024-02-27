@@ -2,7 +2,9 @@ import "../assets/styles/home.scss";
 import { useState, useEffect } from "react";
 import { css } from "@emotion/react";
 import { ClipLoader } from "react-spinners";
-
+import useFetchData from "../hooks/useFetchData";
+import Search from "../components/Search/Search";
+import RecipeList from "../components/RecipeList/RecipeList";
 const override = css`
   display: block;
   margin: 0 auto;
@@ -10,33 +12,40 @@ const override = css`
 `;
 
 const Home = () => {
-  const [loading, setLoading] = useState(true);
-  const [recipes, setRecipes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
   const [submittedSearchTerm, setSubmittedSearchTerm] = useState("");
   const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const [localRecipes, setLocalRecipes] = useState([]);
   const recipesPerPage = 18;
 
+  const { data: recipes, loading } = useFetchData(
+    "https://restapi.fr/generator",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        times: 18,
+        resourceName: "recipes",
+        title: {
+          type: "sentence",
+          range: [1, 3],
+        },
+        image: {
+          type: "image",
+          theme: "food",
+          height: 1000,
+          width: 500,
+        },
+      }),
+    },
+    [currentPage]
+  );
+
   useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        const response = await fetch("https://restapi.fr/api/recipes");
-        if (!response.ok) {
-          throw new Error("Failed to fetch recipes");
-        }
-        const data = await response.json();
-
-        setRecipes(data);
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
-      }
-    };
-
-    fetchRecipes();
-  }, []);
+    setLocalRecipes(recipes);
+  }, [recipes]);
 
   // Filtrer les recettes en fonction de la valeur de recherche soumise
   useEffect(() => {
@@ -57,22 +66,21 @@ const Home = () => {
   const indexOfLastRecipe = currentPage * recipesPerPage;
   const currentRecipes = submittedSearchTerm
     ? filteredRecipes.slice(0, indexOfLastRecipe)
-    : recipes.slice(0, indexOfLastRecipe);
+    : localRecipes.slice(0, indexOfLastRecipe);
 
   const loadMoreRecipes = async () => {
     setCurrentPage((prevPage) => prevPage + 1);
   };
 
-  // Fonction pour mettre à jour la valeur de recherche
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
   // Fonction pour soumettre la recherche
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = (searchTerm) => {
     setSubmittedSearchTerm(searchTerm);
     setCurrentPage(1);
+  };
+
+  const handleDeleteRecipe = (id) => {
+    const updatedRecipes = localRecipes.filter((recipe) => recipe._id !== id);
+    setLocalRecipes(updatedRecipes);
   };
 
   return (
@@ -82,25 +90,10 @@ const Home = () => {
         <section>
           <h1>Découvrez nos nouvelles recettes</h1>
 
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Rechercher une recette..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-            <button type="submit">Rechercher</button>
-          </form>
+          <Search onSearch={handleSubmit} />
 
-          <div className="recette">
-            {currentRecipes &&
-              currentRecipes.map((recipe) => (
-                <div className="card" key={recipe._id}>
-                  <img src={recipe.image} alt="hamburger" />
-                  <p>{recipe.title}</p>
-                </div>
-              ))}
-          </div>
+          <RecipeList recipes={currentRecipes} onDelete={handleDeleteRecipe} />
+
           <button className="loadMore" onClick={loadMoreRecipes}>
             Charger plus de recettes
           </button>
